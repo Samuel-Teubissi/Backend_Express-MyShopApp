@@ -26,12 +26,13 @@ const API_Login = async (req, res) => {
     if (verifUser.errors) return res.status(200).json({ errors: verifUser.errors })
     const dataTrader = await checkTrader(number)
     req.session.user = {
-        data_trader: dataTrader?.id_trader || '',
+        data_trader: dataTrader?.id_trader || null,
         user_id: verifUser.id_user,
         user_name: verifUser.name,
         user_number: verifUser.number,
         role: 'user'
     }
+    console.log('login session', req.session.user)
     res.status(200).json({
         status: 'success',
         message: "Connexion Réussie",
@@ -40,6 +41,7 @@ const API_Login = async (req, res) => {
 }
 
 const API_logged = (req, res) => {
+    console.log('API_logged', req.session.user)
     if (req.session.user) {
         res.status(200).json({
             status: 'success',

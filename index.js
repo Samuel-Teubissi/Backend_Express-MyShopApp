@@ -45,10 +45,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // true si HTTPS
+        secure: process.env.NODE_ENV === 'production' && process.env.HTTPS === 'true', // true si HTTPS
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 1 jour
-        sameSite: 'lax',
     },
 }));
 
