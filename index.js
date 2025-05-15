@@ -8,6 +8,7 @@ import authRoutes from './api/auth/authRoutes.js'
 import notifsRoutes from './api/notifs/notifsRoutes.js'
 import dotenv from 'dotenv';
 import cors from 'cors'
+import path from 'path'
 dotenv.config();
 
 const SQLiteStoreSession = SQLiteStore(session); // constructeur
@@ -32,11 +33,12 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/assets', express.static('assets'))
+const sessionPath = path.join(process.cwd(), 'dbConfig')
 
 app.use(session({
     store: new SQLiteStoreSession({
         db: 'sessions.sqlite', // nom du fichier de session
-        dir: process.env.CONFIG_PATH,     // dossier où stocker le fichier
+        dir: sessionPath,     // dossier où stocker le fichier
         table: 'sessions',     // nom de la table SQLite (optionnel)
     }),
     secret: process.env.SESSION_SECRET,
