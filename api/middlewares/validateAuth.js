@@ -1,8 +1,11 @@
 import { body, validationResult } from "express-validator";
 
 export const isAuthenticated = (req, res, next) => {
-    if (!req.session.user && !req.session.user?.user_id) return res.status(400).json({ errors: "Non autorisé, veuillez vous connecter." })
-    next()
+    console.log('SESSION ACTUELLE :', req.session);
+    if (req.session && req.session.user) {
+        return next(); // l'utilisateur est authentifié
+    }
+    return res.status(401).json({ error: 'Non authentifié' });
 }
 
 export const validateLogin = [

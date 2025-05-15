@@ -52,9 +52,10 @@ const API_logged = (req, res) => {
 const API_logout = (req, res) => {
     req.session.destroy(err => {
         if (err) return res.status(500).json({ controller: 'auth', error: "Erreur lors de la déconnexion" })
+        res.clearCookie('connect.sid');
         res.status(200).json({
             status: true,
-            message: "Déconnexion",
+            message: "Déconnecté avec succès",
         })
     })
 }

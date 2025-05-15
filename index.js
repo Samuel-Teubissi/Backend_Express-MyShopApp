@@ -38,14 +38,17 @@ const sessionPath = path.join(process.cwd(), 'dbConfig')
 app.use(session({
     store: new SQLiteStoreSession({
         db: 'sessions.sqlite', // nom du fichier de session
-        dir: sessionPath,     // dossier où stocker le fichier
+        dir: './dbConfig',     // dossier où stocker le fichier
         table: 'sessions',     // nom de la table SQLite (optionnel)
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // 1 jour
+        secure: process.env.NODE_ENV === 'production', // true si HTTPS
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 1 jour
+        sameSite: 'lax',
     },
 }));
 
@@ -58,6 +61,11 @@ app.use('/api/auth', authRoutes)
 app.get("/", (req, res) => {
     res.send("API Backend de l'application MyShop APP")
 })
+// Exemple d’utilisation
+app.get('/session-test', (req, res) => {
+    req.session.visits = (req.session.visits || 0) + 1;
+    res.json({ message: `Visite n°${req.session.visits}` });
+});
 
 
 app.listen(PORT, () => {
