@@ -84,7 +84,7 @@ const API_logged = async (req, res) => {
 
 const refreshToken = async (req, res) => {
     const token = req.cookies.refreshToken
-    if (!token) return res.sendStatus(401).json({ error: 'Refresh token manquant' });
+    if (!token) return res.status(401).json({ error: 'Refresh token manquant' });
     const payload = verifRefreshToken(token)
     if (!payload) return res.status(401).json({ error: 'Refresh token invalide' });
     try {
@@ -92,9 +92,9 @@ const refreshToken = async (req, res) => {
         if (!user) return res.status(401).json({ error: 'Utilisateur non trouvé' });
         const newAccessToken = generateAccessToken(user)
 
-        res.status(200).json({ accessToken: newAccessToken })
+        return res.status(200).json({ accessToken: newAccessToken })
     } catch (error) {
-        return res.sendStatus(403)
+        return res.status(403)
     }
 }
 

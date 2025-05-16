@@ -22,6 +22,16 @@ export const isAuthenticated = (req, res, next) => {
     // return res.status(401).json({ error: 'Non authentifié' });
 }
 
+export const isLogged = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(" ")[1]
+    req.payload = {}
+    if (token) {
+        req.payload = verifAccessToken(token)
+    }
+    next()
+}
+
 export const validateLogin = [
     body('number')
         .notEmpty().withMessage('Champ requis').bail()
