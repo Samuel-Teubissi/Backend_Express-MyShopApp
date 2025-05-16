@@ -1,7 +1,7 @@
 import express from 'express'
 import { isAuthenticated } from '../middlewares/validateAuth.js'
 import { checkArticleData, validateArticlePost } from '../middlewares/ValidateQuery.js'
-import { API_Trader_Article_delete, API_Trader_Article_get, API_Trader_Article_post, API_Trader_Article_put } from './articleController.js'
+import { API_BTrader, API_Trader_Article_delete, API_Trader_Article_get, API_Trader_Article_post, API_Trader_Article_put } from './articleController.js'
 import uploadFile from '../middlewares/uploadFile.js'
 
 const router = express.Router()
@@ -20,6 +20,7 @@ function handleUpload(req, res, next) {
     })
 }
 
+router.get('/become_trader', isAuthenticated, API_BTrader)
 router.get('/:articleID', isAuthenticated, API_Trader_Article_get)
 router.delete('/:articleID', isAuthenticated, API_Trader_Article_delete)
 router.post('/add', isAuthenticated, handleUpload, checkArticleData, validateArticlePost, API_Trader_Article_post)

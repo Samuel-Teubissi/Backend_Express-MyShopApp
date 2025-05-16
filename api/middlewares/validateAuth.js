@@ -1,11 +1,25 @@
 import { body, validationResult } from "express-validator";
+import { verifAccessToken } from "./token.js";
 
 export const isAuthenticated = (req, res, next) => {
-    console.log('SESSION ACTUELLE :', req.session.user);
-    if (req.session && req.session?.user) {
-        return next(); // l'utilisateur est authentifié
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ error: 'Token manquant' });
     }
-    return res.status(401).json({ error: 'Non authentifié' });
+    const token = authHeader.split(" ")[1]
+    try {
+        const payload = verifAccessToken(token)
+        req.user = payload
+        next()
+    } catch (error) {
+        return res.status(401).json({ error: 'Token invalide ou expiré' });
+    }
+
+    // console.log('SESSION ACTUELLE :', req.session.user);
+    // if (req.session && req.session?.user) {
+    //     return next(); // l'utilisateur est authentifié
+    // }
+    // return res.status(401).json({ error: 'Non authentifié' });
 }
 
 export const validateLogin = [

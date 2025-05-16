@@ -1,6 +1,15 @@
 import db from '../../dbConfig/db.js'
 
-const getArticle = async (articleID, TraderId = "25") => {
+const BecomeTrader = async (data) => {
+    const verifTrader = db('trader').select('*').where({ id_trader: data.id_trader }).first()
+    if (verifTrader.lentgh === 0) {
+        const [idTrader] = db('trader').insert(data)
+        return idTrader
+    }
+    return null
+}
+
+const getArticle = async (articleID, TraderId) => {
     return db('articles').select('*').where({ id_articles: articleID, id_trader: TraderId }).first()
 }
 
@@ -20,4 +29,4 @@ const saveArticle = async (data) => {
     return await db('articles').insert(data)
 }
 
-export { getArticle, deleteArticle, updateArticle, checkArticle, saveArticle }
+export { getArticle, deleteArticle, updateArticle, checkArticle, saveArticle, BecomeTrader }

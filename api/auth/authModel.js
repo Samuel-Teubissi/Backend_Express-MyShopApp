@@ -2,6 +2,10 @@ import dayjs from 'dayjs'
 import db from '../../dbConfig/db.js'
 import { createHash } from 'crypto'
 
+export const findUser = async (user_id) => {
+    return await db('user').where({ user_id }).first()
+}
+
 export const userExist = async (number) => {
     return await db('user').where({ number }).first()
 }

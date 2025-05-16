@@ -1,15 +1,29 @@
 import dayjs from "dayjs";
 import * as articleModel from "./articleModel.js";
+import { generateAccessToken } from "../middlewares/token.js";
+
+const formattedDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+const API_BTrader = async (req, res) => {
+    const { user_id, id_trader, user_name, user_number } = req.user
+    const dataTrader = { id_trader, number: user_number, name: user_name, trader_date: formattedDate }
+    const data_trader = await articleModel.BecomeTrader(dataTrader)
+    if (!data_trader) return res.status(200).send('Vous êtes déjà trader !')
+    const newPayload = { data_trader, user_id, id_trader, user_name, user_number }
+    const newAccessToken = generateAccessToken(newPayload)
+
+    res.status(200).json({ status: true, message: "Vous êtes désormais un Trader !", token: newAccessToken })
+}
 
 const API_Trader_Article_get = async (req, res) => {
-    const { data_trader } = req.session.user || {}
+    const { data_trader } = req.user || {}
     const { articleID } = req.params
-    let articleData = await articleModel.getArticle(articleID)
+    let articleData = await articleModel.getArticle(articleID, data_trader)
     res.status(200).json(articleData)
 }
 
 const API_Trader_Article_delete = async (req, res) => {
-    const { data_trader } = req.session.user
+    const { data_trader } = req.user
     const { articleID } = req.params
     await articleModel.deleteArticle(articleID, data_trader)
     res.status(200).json({
@@ -24,7 +38,6 @@ const API_Trader_Article_put = async (req, res) => {
     const file_name = req.file?.filename || null
 
     try {
-        const formattedDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
         const data = { date_updated: formattedDate }
         if (article) data.article = article
         if (price) data.price = price
@@ -49,7 +62,7 @@ const API_Trader_Article_put = async (req, res) => {
 }
 
 const API_Trader_Article_post = async (req, res) => {
-    const { data_trader } = req.session.user;
+    const { data_trader } = req.user;
     const { article, price, quantity, category } = req.body;
     const file_name = req.file?.filename || null
 
@@ -57,7 +70,6 @@ const API_Trader_Article_post = async (req, res) => {
         if (article && price && quantity && category && file_name) {
             const verifArticle = await articleModel.checkArticle(article)
             if (verifArticle.length === 0) {
-                const formattedDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
                 const data = {
                     id_trader: data_trader,
                     price: price,
@@ -82,4 +94,4 @@ const API_Trader_Article_post = async (req, res) => {
     }
 }
 
-export { API_Trader_Article_delete, API_Trader_Article_get, API_Trader_Article_put, API_Trader_Article_post }
+export { API_Trader_Article_delete, API_Trader_Article_get, API_Trader_Article_put, API_Trader_Article_post, API_BTrader }

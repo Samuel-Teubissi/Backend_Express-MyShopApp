@@ -9,6 +9,7 @@ import notifsRoutes from './api/notifs/notifsRoutes.js'
 import dotenv from 'dotenv';
 import cors from 'cors'
 import path from 'path'
+import cookieParser from 'cookie-parser'
 dotenv.config();
 
 const SQLiteStoreSession = SQLiteStore(session); // constructeur
@@ -17,6 +18,8 @@ const app = express()
 const PORT = process.env.PORT
 const allowedOrigins = [process.env.ALLOW_CORS];
 
+//Middleware pour gérer les cookies
+app.use(cookieParser())
 // Middleware pour parser les données JSON
 // app.use(bodyParser.json());
 app.use(cors({
@@ -39,16 +42,16 @@ app.use(session({
     store: new SQLiteStoreSession({
         db: 'sessions.sqlite', // nom du fichier de session
         dir: './dbConfig',     // dossier où stocker le fichier
-        table: 'sessions',     // nom de la table SQLite (optionnel)
+        // table: 'sessions',     // nom de la table SQLite (optionnel)
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production' && process.env.HTTPS === 'true', // true si HTTPS
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production', // ⚠️ vrai en prod
+        sameSite: 'none',  // pour permettre les cookies cross-origin
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000, // 1 jour
+        maxAge: 1000 * 60 * 60 * 24 // 1 jour
     },
 }));
 
