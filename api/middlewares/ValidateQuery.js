@@ -29,7 +29,7 @@ export const validateSearchQuery = [
     query('search_article')
         .trim().escape().optional(),
     query('search_categ')
-        .escape().custom(value => Number(value) > 0).optional(),
+        .trim().escape().optional(),
     query('controller')
         .trim().escape(),
     // .notEmpty().withMessage('Pas de controller'),

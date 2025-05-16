@@ -1,5 +1,8 @@
 import { body, validationResult } from "express-validator";
-import { verifAccessToken } from "./token.js";
+import { verifAccessToken, verifRefreshToken } from "./token.js";
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const isAuthenticated = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -24,10 +27,13 @@ export const isAuthenticated = (req, res, next) => {
 
 export const isLogged = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    const token = authHeader.split(" ")[1]
     req.payload = {}
-    if (token) {
-        req.payload = verifAccessToken(token)
+    if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1]
+        const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
+        jwt.verify(token, REFRESH_TOKEN_SECRET, (err, user) => {
+            if (!err) req.payload = user
+        })
     }
     next()
 }
