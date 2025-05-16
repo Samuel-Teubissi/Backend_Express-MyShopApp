@@ -52,7 +52,7 @@ const API_Trader_Article_put = async (req, res) => {
                 message: "Aucune donnée à mettre à jour"
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             status: "success",
             message: "Produit mis à jour !"
         })
@@ -81,12 +81,12 @@ const API_Trader_Article_post = async (req, res) => {
                     date: formattedDate
                 }
                 await articleModel.saveArticle(data)
-                res.status(200).json({
+                return res.status(200).json({
                     status: "success",
                     message: "L'article a été ajouté avec succès"
                 })
             } else {
-                res.status(200).json({ errors: { article: "Ce nom d'article est déjà utilisé" } })
+                return res.status(200).json({ errors: { article: "Ce nom d'article est déjà utilisé" } })
             }
         }
     } catch (error) {

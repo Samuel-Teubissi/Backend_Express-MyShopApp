@@ -9,7 +9,7 @@ const API_Home_Articles = async (req, res) => {
     // Récupérer les articles paginés 
     try {
         const articles = await articlesModel.API_get_Articles(data_trader, { offset, per_page })
-        const total_articles = (await articlesModel.API_get_Articles()).length
+        const total_articles = (await articlesModel.API_get_Articles(data_trader)).length
         const total_pages = Math.ceil(total_articles / per_page);
         res.status(200).json({
             status: 'success',
