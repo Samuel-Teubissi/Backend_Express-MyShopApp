@@ -6,7 +6,7 @@ import * as articlesModel from "./articlesModel.js";
 const API_Home_Articles = async (req, res) => {
     const { offset, per_page } = req.pagination
     // Simule session comme dans CI3
-    const { data_trader } = req.payload || {};
+    const { data_trader } = req.payload;
     // Récupérer les articles paginés 
     try {
         const articles = await articlesModel.API_get_Articles(data_trader, { offset, per_page })

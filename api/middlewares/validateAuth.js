@@ -28,11 +28,14 @@ export const isAuthenticated = (req, res, next) => {
 export const isLogged = (req, res, next) => {
     const authHeader = req.headers.authorization;
     req.payload = {}
-    if (authHeader?.startsWith('Bearer ')) {
-        const token = authHeader.split(' ')[1]
-        const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
-        jwt.verify(token, REFRESH_TOKEN_SECRET, (err, user) => {
-            if (!err) req.payload = user
+    if (authHeader?.startsWith("Bearer ")) {
+        const token = authHeader.split(" ")[1]
+        const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
+        jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, payloadToken) => {
+            if (!err) {
+                // const user = await findUser(payloadToken.user_id)
+                req.payload = payloadToken
+            }
         })
     }
     next()

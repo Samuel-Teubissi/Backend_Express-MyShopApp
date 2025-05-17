@@ -55,7 +55,7 @@ export const checkArticleData = [
         .isLength({ min: 3 }).withMessage('3 caractères minimum').bail()
         .matches(/^[\p{L}\p{N} ]+$/u).withMessage("Le nom n'a pas un format valide"),
     body('price')
-        .isInt({ min: 25 }).withMessage('Les prix commencent à partir de 25 F').bail()
+        .isInt({ min: 25 }).withMessage('Prix à partir de 25 F').bail()
         .custom(value => value.toString().length >= 2).withMessage('Saisissez un numéro valide'),
     body('quantity')
         .isInt({ min: 0 }).withMessage('Quantité non valide'),
