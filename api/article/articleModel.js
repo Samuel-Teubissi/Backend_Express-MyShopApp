@@ -1,12 +1,12 @@
 import db from '../../dbConfig/db.js'
 
 const BecomeTrader = async (data) => {
-    const verifTrader = db('trader').select('*').where({ id_trader: data.id_trader }).first()
-    if (verifTrader.lentgh === 0) {
-        const [idTrader] = db('trader').insert(data)
-        return idTrader
-    }
-    return null
+    // const verifTrader = db('trader').select('*').where({ id_trader: data.id_trader }).first()
+    // if (!data.id_trader) {
+    const [idTrader] = await db('trader').insert(data)
+    return idTrader
+    // }
+    // return null
 }
 
 const getArticle = async (articleID, TraderId) => {

@@ -4,6 +4,7 @@ import session from 'express-session';
 import SQLiteStore from 'connect-sqlite3';
 import articlesRoutes from './api/articles/articlesRoutes.js'
 import articleRoutes from './api/article/articleRoutes.js'
+import adminRoutes from './api/admin/adminRoutes.js'
 import authRoutes from './api/auth/authRoutes.js'
 import notifsRoutes from './api/notifs/notifsRoutes.js'
 import dotenv from 'dotenv';
@@ -56,6 +57,7 @@ app.use(session({
 }));
 
 // Gestion des Routes de l'application
+app.use('/api/admin', adminRoutes)
 app.use('/api/articles', articlesRoutes)
 app.use('/api/article', articleRoutes)
 app.use('/api/notifs', notifsRoutes)

@@ -5,11 +5,11 @@ import { generateAccessToken } from "../middlewares/token.js";
 const formattedDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
 const API_BTrader = async (req, res) => {
-    const { user_id, id_trader, user_name, user_number } = req.user
-    const dataTrader = { id_trader, number: user_number, name: user_name, trader_date: formattedDate }
-    const data_trader = await articleModel.BecomeTrader(dataTrader)
-    if (!data_trader) return res.status(200).send('Vous êtes déjà trader !')
-    const newPayload = { data_trader, user_id, id_trader, user_name, user_number }
+    const { user_id, data_trader, user_name, user_number } = req.user
+    if (data_trader) return res.status(200).json({ status: false, message: '', errors: 'Vous êtes déjà trader !' })
+    const dataTrader = { id_trader: data_trader, number: user_number, name: user_name, trader_date: formattedDate }
+    const Btrader = await articleModel.BecomeTrader(dataTrader)
+    const newPayload = { data_trader: Btrader, user_id, user_name, user_number, role: 'user' }
     const newAccessToken = generateAccessToken(newPayload)
 
     res.status(200).json({ status: true, message: "Vous êtes désormais un Trader !", token: newAccessToken })

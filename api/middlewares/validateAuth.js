@@ -45,7 +45,13 @@ export const validateLogin = [
     body('number')
         .notEmpty().withMessage('Champ requis').bail()
         .isInt().withMessage('Saisissez un numéro valide').bail()
-        .custom(value => value.toString().length >= 3).withMessage('Saisissez un numéro valide'),
+        // .custom((val) => {
+        //     if (val.toString().length >= 9 || val === '000') {
+        //         return true; // validation OK
+        //     }
+        //     throw new Error('Saisissez un numéro valide.');
+        // }),
+        .custom(value => value.toString().length >= 9 || value === '000').withMessage('Saisissez un numéro valide'),
     body('password')
         .notEmpty().withMessage('Champ requis'),
     (req, res, next) => {

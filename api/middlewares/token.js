@@ -16,7 +16,7 @@ export function generateAccessToken(user) {
             role: user.role
         },
         ACCESS_TOKEN_SECRET,
-        { expiresIn: "45m" }
+        { expiresIn: "1d" }
     );
 }
 

