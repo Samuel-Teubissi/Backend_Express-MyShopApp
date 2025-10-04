@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     },
     // destination: path.resolve(process.cwd(), 'assets/img/articles/'),
     filename: (req, file, cb) => {
-        const fileName = 'article_' + req.session.user.data_trader + '-' + Date.now() //file.originalname
+        const fileName = 'article_' + req.user.data_trader + '-' + Date.now() //file.originalname
         cb(null, fileName)
     }
 })
